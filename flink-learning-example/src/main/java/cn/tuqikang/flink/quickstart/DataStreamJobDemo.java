@@ -25,15 +25,16 @@ public class DataStreamJobDemo {
         // set up the streaming execution environment
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
-        //获取数据
+        //source
         DataStreamSource<String> stream = env.socketTextStream(hostname, port);
 
-        //计数
+        //transform
         //(KeySelector<Tuple2<Integer, String>, Integer>) tuple2 -> tuple2.f0
         SingleOutputStreamOperator<Tuple2<String, Integer>> sum = stream.flatMap(new LineSplitter())
                 .keyBy(t -> t.f0)
                 .sum(1);
 
+        //sink
         sum.print();
 
         env.execute("Tqk-DataStreamJobDemo-Example");
